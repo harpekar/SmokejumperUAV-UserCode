@@ -1,0 +1,70 @@
+#!/bin/python
+#The KY040 Pinout is as follows: 
+# CLK is Encoder Pin A, DT is Encoder Pin B, and GND is Encoder Pin C.
+
+
+import gpiozero
+from RPi import GPIO
+from time import sleep
+
+led = gpiozero.LED(21)
+button = gpiozero.Button(20)
+clk = 15
+dt = 14
+
+counter = 0
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(clk,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(dt,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+
+pressed = False;
+
+def button_pressed():
+    global pressed
+    led.on()    
+    pressed = True;
+
+def button_released():
+    global pressed
+    led.off()
+    pressed = False;
+
+def rotaryTurn(clkLastState):
+    global counter
+    clkState = GPIO.input(clk)
+    dtState = GPIO.input(dt)
+    if clkState != clkLastState:
+	    if dtState != clkState:
+		    counter -= 1
+	    else:
+		    counter += 1
+            
+	    if (counter == 20) or (counter == -20):
+		    counter = 0
+	    clkLastState = clkState
+	    sleep(0.02)
+
+    return counter
+
+
+clkLastState = GPIO.input(clk)
+button.when_pressed = button_pressed
+button.when_released = button_released
+
+
+print "Choose Altitude"
+currentHeight = 0
+
+while not pressed: 
+    clkLastState = GPIO.input(clk)
+    height = 6*rotaryTurn(clkLastState) 
+    #Maximum height is 120m, max output of Encoder is 20. So resolution = 6meters/div
+    
+    if height != currentHeight: 
+        currentHeight = height
+        print "Height =" + str(height) + "m"
+
+
+print "Ascending to " + str(height) + "m"
+            
