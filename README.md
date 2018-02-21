@@ -10,3 +10,4 @@ Contained in this repository are:
 - panorama.jpg: Provided example panorama for testing
 -usercode: A python script that will run through the basic logic of a mission: take in altitude data, send start signal to avionics, and display picture on panorama after landing
 -proofscript: a simple python script demonstrating the functionality of the User Interface
+d
