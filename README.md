@@ -8,3 +8,5 @@ The Dependencies of this code are as follows:
 Contained in this repository are: 
 - panorama.sh: Bash script that takes in a jpg panorama image, scales it for a 320 pixel tall display, overlays heading data onto it (one notch every 10 degrees), converts it to truecolor BMP, and crops it to prepare it for display on the TFT display. 
 - panorama.jpg: Provided example panorama for testing
+-usercode: A python script that will run through the basic logic of a mission: take in altitude data, send start signal to avionics, and display picture on panorama after landing
+-proofscript: a simple python script demonstrating the functionality of the User Interface
