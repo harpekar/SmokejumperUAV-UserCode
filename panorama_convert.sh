@@ -1,39 +1,62 @@
 #!/bin/bash
 
+if [ -z "$1" ]; then
+	echo "Please provide an image"
+	exit 1
+fi
+
+if [ ! -r "$1" ]; then
+	echo "Unable to read file $1"
+	exit 1
+fi
+
+title=$(cut -d'.' -f1 <<< "$1")
+new_image=$title-annotated.bmp
+
 echo "Converting from JPG to BMP file"
-convert panorama.jpg -fill black -gravity Southwest -pointsize 30 -resize 'x320' panorama.bmp
+convert $1 -fill black -gravity Southwest -pointsize 30 -resize 'x320' $new_image
 
 echo "Finding dimensions of image"
 
-W=$(identify -format '%w' panorama.bmp) #width
+W=$(identify -format '%w' $new_image) #width
 
 fourth=$((W/4))
 half=$((W/2))
 threefourths=$((3*W/4))
 
-
 echo "Annotating Image"
-convert panorama.bmp -fill white -gravity Southwest -pointsize 30 -annotate +0+0 'North' -annotate +$fourth+0 'East' -annotate +$half+0 'South' -annotate +$threefourths+0 'West' panorama-ann.bmp   
+mogrify\
+	-fill white \
+	-gravity Southwest \
+	-pointsize 30 \
+	-annotate +0+0 'North' \
+	-annotate +$fourth+0 'East' \
+	-annotate +$half+0 'South' \
+	-annotate +$threefourths+0 'West'\
+	$new_image
 
+# mogrify \
+# 	-fill white \
+# 	-gravity Northwest \
+# 	-pointsize 30 \
+# 	-type truecolor \
+# 	-annotate +$((W*X/36))+0 '|' \
+#	$new_image	
 
-convert panorama-ann.bmp -fill white -gravity Northwest -pointsize 30 -type truecolor -annotate +$((W*X/36))+0 '|' degreeoutput.bmp
-
-X=1
-
-while [ $((W*X/36)) -lt $W ];
-do
-	convert degreeoutput.bmp -fill white -gravity Northwest -pointsize 30 -type truecolor -annotate +$((W*X/36))+0 '|' degreeoutput.bmp
-	let X=$X+1
+ten_deg_px=$((W/36))
+for i in $(seq 0 36); do
+	px_pos=$((i*ten_deg_px))
+	mogrify\
+		-fill white \
+		-gravity Northwest \
+		-pointsize 30 \
+		-type truecolor \
+		-annotate +$px_pos+0 '|' \
+		-pointsize 15 \
+		-annotate +$px_pos+30 $((i*10)) \
+		$new_image 
 done
 
-convert degreeoutput.bmp +flip -rotate 90 -type truecolor -gravity Southwest rotate.bmp
+xdg-open $new_image
 
-COUNTER=0
-
-while [ $((480*$COUNTER)) -lt  $W ];
-do
-	convert rotate.bmp -crop 320x480+0+$((480*$COUNTER)) -type truecolor crop$COUNTER.bmp
-	let COUNTER=$COUNTER+1
-done
-
-xdg-open rotate.bmp
+exit 
