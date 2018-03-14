@@ -75,7 +75,4 @@ vehicle.mode = VehicleMode("RTL")
 #Close vehicle object before exiting script
 print "Close vehicle object"
 vehicle.close()
-
-# Shut down simulator if it was started.
-if sitl is not None:
-	sitl.stop()            
+          
