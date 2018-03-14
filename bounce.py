@@ -10,28 +10,13 @@ from dronekit import connect, VehicleMode, LocationGlobal, LocationGlobalRelativ
 from pymavlink import mavutil
 import time
 import math
-#import picamera
-
-DEBUG = True
+import picamera
 
 # Initialize Camera Object 
-# camera = picamera.PiCamera()
+camera = picamera.PiCamera()
 
-#DEBUG tests code without piCamera and using SITL 
-if DEBUG == True:
-   connection_string = 0
-else:
-   connection_string = '/dev/serial0'
-
-sitl = None
-
-
-#Start SITL if DEBUG enabled 
-if not connection_string:
-    import dronekit_sitl
-    sitl = dronekit_sitl.start_default()
-    connection_string = sitl.connection_string()
-
+#Set connection string  
+connection_string = '/dev/serial0'
 
 # Connect to the Vehicle
 print 'Connecting to vehicle on: %s' % connection_string
@@ -76,7 +61,6 @@ def arm_and_takeoff(aTargetAltitude):
         time.sleep(1)
 
 # Function to yaw the copter
-# Needs a check function to monitor yaw progress
 def condition_yaw(heading, relative=True):
     if relative:
         is_relative=1 #yaw relative to direction of travel
@@ -95,40 +79,25 @@ def condition_yaw(heading, relative=True):
     # send command to vehicle
     vehicle.send_mavlink(msg)
 
-'''    while True:
-	print "Yaw heading: ", 
-
-'''
+   while True:
+        print "Yaw Heading ", vehicle.heading
+        #Break and return from function just before next heading is reached.        
+        if vehicle.heading >= heading*0.95: 
+            print "Reached target heading"
+            break
+        time.sleep(.5)
 
 # Function to adjust yaw and trigger camera for full 360 degrees
-def collect_images(image_number):
+def collect_images(num_images):
     image_number = 10 		# Number of images to be collected
     degrees = 360/image_number	# Heading offset in degrees per image
     heading = 0			# Innitial heading in degrees
 
     for i in range (1,image_number):
-	if DEBUG == True:
-	   print 'Capturing image at %s degrees' % heading
-	else:
-	   camera.capture('image%s.jpg' % i)
-	time.sleep(1)
+	condition_yaw(heading)
+	camera.capture('image%s.jpg', % i)
 	print 'Image %s saved' % i
-        condition_yaw(degrees)
-        heading = heading + degrees
-	time.sleep(3)
+	time.sleep(.5) 
+	heading = heading + degrees
 
 
-arm_and_takeoff(10)
-
-collect_images(10)
-
-print "Returning to Launch"
-vehicle.mode = VehicleMode("RTL")
-
-#Close vehicle object before exiting script
-print "Close vehicle object"
-vehicle.close()
-
-# Shut down simulator if it was started.
-if sitl is not None:
-    sitl.stop()
