@@ -3,22 +3,27 @@
 # CLK is Encoder Pin A, DT is Encoder Pin B, and GND is Encoder Pin C.
 
 
-import gpiozero
+from gpiozero import LED
 from RPi import GPIO
 from time import sleep
+from bounce.py import arm_and_takeoff, condition_yaw, collect_images
 
-led = gpiozero.LED(21)
-button = gpiozero.Button(20)
-clk = 15
-dt = 14
+led = gpiozero.LED(1)
+button = gpiozero.Button(12)
+clk = 20
+dt = 21
+power = 16
 
 counter = 0
+pressed = False; 
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(clk,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(dt,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
 
-pressed = False;
+clkLastState = GPIO.input(clk)
+button.when_pressed = button_pressed
+button.when_released = button_released
 
 def button_pressed():
     global pressed
@@ -47,13 +52,7 @@ def rotaryTurn(clkLastState):
 
     return counter
 
-
-clkLastState = GPIO.input(clk)
-button.when_pressed = button_pressed
-button.when_released = button_released
-
-
-print "Choose Altitude"
+print "Please choose your Altitude. Press button to select"
 currentHeight = 0
 
 while not pressed: 
@@ -67,4 +66,16 @@ while not pressed:
 
 
 print "Ascending to " + str(height) + "m"
-            
+arm_and_takeoff(height)
+
+collect_images(6)
+print "Returning to Launch"
+vehicle.mode = VehicleMode("RTL")
+
+#Close vehicle object before exiting script
+print "Close vehicle object"
+vehicle.close()
+
+# Shut down simulator if it was started.
+if sitl is not None:
+	sitl.stop()            

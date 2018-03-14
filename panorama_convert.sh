@@ -10,6 +10,8 @@ if [ ! -r "$1" ]; then
 	exit 1
 fi
 
+python usercode
+
 title=$(cut -d'.' -f1 <<< "$1")
 new_image=$title-annotated.bmp
 
@@ -53,7 +55,7 @@ for i in $(seq 0 36); do
 		-type truecolor \
 		-annotate +$px_pos+0 '|' \
 		-pointsize 15 \
-		-annotate +$px_pos+30 $((i*10)) \
+		-annotate +$((px_pos-20))+30 $((i*10)) \
 		$new_image 
 done
 
