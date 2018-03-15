@@ -12,16 +12,6 @@ import time
 import math
 import picamera
 
-# Initialize Camera Object 
-camera = picamera.PiCamera()
-
-#Set connection string  
-connection_string = '/dev/serial0'
-
-# Connect to the Vehicle
-print 'Connecting to vehicle on: %s' % connection_string
-vehicle = connect(connection_string,baud = 57600, wait_ready=True)
-
 
 # Function to arm and takeoff copter
 # Monitors alititude and confirms alitude before falling out of function
