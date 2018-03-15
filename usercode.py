@@ -64,6 +64,16 @@ while not pressed:
         currentHeight = height
         print "Height =" + str(height) + "m"
 
+#Initialize Camera Object 
+camera = picamera.PiCamera()
+
+#Set connection string  
+connection_string = '/dev/serial0'
+
+# Connect to the Vehicle
+print 'Connecting to vehicle on: %s' % connection_string
+vehicle = connect(connection_string,baud = 57600, wait_ready=True)
+	
 print "Place aircraft in launch location"
 time.sleep(2)
 print "Taking off in: "
