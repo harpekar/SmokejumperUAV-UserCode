@@ -64,7 +64,12 @@ while not pressed:
         currentHeight = height
         print "Height =" + str(height) + "m"
 
-
+print "Place aircraft in launch location"
+time.sleep(2)
+print "Taking off in: "
+for i in range (10,0):
+	print i
+	time.sleep(1)
 print "Ascending to " + str(height) + "m"
 arm_and_takeoff(height)
 
