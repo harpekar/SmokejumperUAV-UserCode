@@ -16,7 +16,7 @@ convert image*.jpg +append panorama.jpg
 python usercode
 
 #title=$(cut -d'.' -f1 <<< "panorama.jpg")
-new_image=$title-annotated.bmp
+new_image=annotated.bmp
 
 echo "Converting from JPG to BMP file"
 convert panorama.jpg -fill black -gravity Southwest -pointsize 30 -resize 'x320' $new_image
