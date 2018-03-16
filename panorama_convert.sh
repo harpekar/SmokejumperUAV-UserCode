@@ -1,22 +1,25 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
-	echo "Please provide an image"
-	exit 1
-fi
+echo "Converting into panorama"
+convert image*.jpg +append panorama.jpg
 
-if [ ! -r "$1" ]; then
-	echo "Unable to read file $1"
-	exit 1
-fi
+#if [ -z "$1" ]; then
+	#echo "Please provide an image"
+	#exit 1
+#fi
+
+#if [ ! -r "$1" ]; then
+	#echo "Unable to read file $1"
+	#exit 1
+#fi
 
 python usercode
 
-title=$(cut -d'.' -f1 <<< "$1")
+#title=$(cut -d'.' -f1 <<< "panorama.jpg")
 new_image=$title-annotated.bmp
 
 echo "Converting from JPG to BMP file"
-convert $1 -fill black -gravity Southwest -pointsize 30 -resize 'x320' $new_image
+convert panorama.jpg -fill black -gravity Southwest -pointsize 30 -resize 'x320' $new_image
 
 echo "Finding dimensions of image"
 
