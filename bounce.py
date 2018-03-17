@@ -12,9 +12,9 @@ import time
 import math
 import picamera
 
-
 # Function to arm and takeoff copter
 # Monitors alititude and confirms alitude before falling out of function
+
 def arm_and_takeoff(aTargetAltitude):
     """
     Arms vehicle and fly to aTargetAltitude.
@@ -69,7 +69,7 @@ def condition_yaw(heading, relative=True):
     # send command to vehicle
     vehicle.send_mavlink(msg)
 
-   while True:
+    while True:
         print "Yaw Heading ", vehicle.heading
         #Break and return from function just before next heading is reached.        
         if vehicle.heading >= heading*0.95: 
@@ -83,11 +83,11 @@ def collect_images(num_images):
     degrees = 360/image_number	# Heading offset in degrees per image
     heading = 0			# Innitial heading in degrees
 
-    for i in range (1,image_number):
-	condition_yaw(heading)
-	camera.capture('image%s.jpg', % i)
-	print 'Image %s saved' % i
-	time.sleep(.5) 
-	heading = heading + degrees
+#    for i in range (1,image_number):
+#	condition_yaw(heading)
+#	camera.capture('image%s.jpg' % i)
+#	print 'Image %s saved' % i
+#	time.sleep(.5) 
+#	heading = heading + degrees
 
 

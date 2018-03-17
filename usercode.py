@@ -52,12 +52,23 @@ def rotaryTurn(clkLastState):
 
     return counter
 
+#Initialize Camera Object
+camera = picamera.PiCamera()
+
+#Set connection string
+connection_string = '/dev/serial0'
+
+#Connection to the vehicle
+print 'Connection to the vehicle on: %s ' % connection_string
+
+vehicle = connect(connection_string,baud=57600, wait_ready=True)
+
 print "Please choose your Altitude. Press button to select"
 currentHeight = 0
 
 while not pressed: 
     clkLastState = GPIO.input(clk)
-    height = 6*rotaryTurn(clkLastState) 
+    height = rotaryTurn(clkLastState) 
     #Maximum height is 120m, max output of Encoder is 20. So resolution = 6meters/div
     
     if height != currentHeight: 
