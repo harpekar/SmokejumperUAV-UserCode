@@ -2,11 +2,15 @@
 #The KY040 Pinout is as follows: 
 # CLK is Encoder Pin A, DT is Encoder Pin B, and GND is Encoder Pin C.
 
-
-from gpiozero import LED
+import picamera
+import gpiozero
+import math
+import time
 from RPi import GPIO
 from time import sleep
-from bounce.py import arm_and_takeoff, condition_yaw, collect_images
+from bounce import arm_and_takeoff, condition_yaw, collect_images
+from dronekit import connect, VehicleMode, LocationGlobal, LocationGlobalRelative
+from pymavlink import mavutil
 
 led = gpiozero.LED(1)
 button = gpiozero.Button(12)
@@ -18,13 +22,11 @@ counter = 0
 pressed = False; 
 
 GPIO.setmode(GPIO.BCM)
+GPIO.setup(power, GPIO.OUT, initial = GPIO.HIGH)
 GPIO.setup(clk,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(dt,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
 
 clkLastState = GPIO.input(clk)
-button.when_pressed = button_pressed
-button.when_released = button_released
-
 def button_pressed():
     global pressed
     led.on()    
@@ -52,16 +54,8 @@ def rotaryTurn(clkLastState):
 
     return counter
 
-#Initialize Camera Object
-camera = picamera.PiCamera()
-
-#Set connection string
-connection_string = '/dev/serial0'
-
-#Connection to the vehicle
-print 'Connection to the vehicle on: %s ' % connection_string
-
-vehicle = connect(connection_string,baud=57600, wait_ready=True)
+button.when_pressed = button_pressed
+button.when_released = button_released
 
 print "Please choose your Altitude. Press button to select"
 currentHeight = 0
@@ -69,8 +63,7 @@ currentHeight = 0
 while not pressed: 
     clkLastState = GPIO.input(clk)
     height = rotaryTurn(clkLastState) 
-    #Maximum height is 120m, max output of Encoder is 20. So resolution = 6meters/div
-    
+   
     if height != currentHeight: 
         currentHeight = height
         print "Height =" + str(height) + "m"
@@ -92,7 +85,7 @@ for i in range (10,0):
 	print i
 	time.sleep(1)
 print "Ascending to " + str(height) + "m"
-arm_and_takeoff(height)
+arm_and_takeoff(vehicle, height)
 
 collect_images(6)
 print "Returning to Launch"

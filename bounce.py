@@ -15,7 +15,7 @@ import picamera
 # Function to arm and takeoff copter
 # Monitors alititude and confirms alitude before falling out of function
 
-def arm_and_takeoff(aTargetAltitude):
+def arm_and_takeoff(vehicle, aTargetAltitude):
     """
     Arms vehicle and fly to aTargetAltitude.
     """
