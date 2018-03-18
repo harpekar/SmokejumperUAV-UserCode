@@ -68,6 +68,8 @@ while not pressed:
         currentHeight = height
         print "Height =" + str(height) + "m"
 
+print "Ascending to " + str(height) + "m"
+
 #Initialize Camera Object 
 camera = picamera.PiCamera()
 
@@ -79,12 +81,11 @@ print 'Connecting to vehicle on: %s' % connection_string
 vehicle = connect(connection_string,baud = 57600, wait_ready=True)
 	
 print "Place aircraft in launch location"
-time.sleep(2)
+time.sleep(5)
 print "Taking off in: "
-for i in range (10,0):
+for i in range (0,10):
 	print i
 	time.sleep(1)
-print "Ascending to " + str(height) + "m"
 arm_and_takeoff(vehicle, height)
 
 collect_images(6)
