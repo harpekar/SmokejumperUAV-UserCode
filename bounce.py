@@ -69,25 +69,20 @@ def condition_yaw(heading, relative=True):
     # send command to vehicle
     vehicle.send_mavlink(msg)
 
-    while True:
-        print "Yaw Heading ", vehicle.heading
-        #Break and return from function just before next heading is reached.        
-        if vehicle.heading >= heading*0.95: 
-            print "Reached target heading"
-            break
-        time.sleep(.5)
-
 # Function to adjust yaw and trigger camera for full 360 degrees
 def collect_images(num_images):
+    #Initialize Camera Object 
+    camera = picamera.PiCamera()
+    
     image_number = 10 		# Number of images to be collected
     degrees = 360/image_number	# Heading offset in degrees per image
     heading = 0			# Innitial heading in degrees
 
-#    for i in range (1,image_number):
-#	condition_yaw(heading)
-#	camera.capture('image%s.jpg' % i)
-#	print 'Image %s saved' % i
-#	time.sleep(.5) 
-#	heading = heading + degrees
+   for i in range (1,image_number):
+	condition_yaw(heading)
+	camera.capture('image%s.jpg' % i)
+	print 'Image %s saved' % i
+	time.sleep(.5) 
+	heading = heading + degrees
 
 
