@@ -70,9 +70,6 @@ while not pressed:
 
 print "Ascending to " + str(height) + "m"
 
-#Initialize Camera Object 
-camera = picamera.PiCamera()
-
 #Set connection string  
 connection_string = '/dev/serial0'
 
