@@ -45,9 +45,9 @@ def rotaryTurn(clkLastState):
 	    if dtState != clkState:
 		    counter -= 1
 	    else:
-		    counter += 1
-            
-	    if (counter == 20) or (counter == -20):
+		    counter += 1 
+
+	    if (counter == 20) or (counter < 0):
 		    counter = 0
 	    clkLastState = clkState
 	    sleep(0.02)
@@ -83,7 +83,7 @@ print "Taking off in: "
 for i in range (0,10):
 	print i
 	time.sleep(1)
-arm_and_takeoff(vehicle, height)
+        arm_and_takeoff(vehicle, height)
 
 collect_images(6)
 print "Returning to Launch"

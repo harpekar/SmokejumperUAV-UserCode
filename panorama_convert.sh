@@ -7,7 +7,7 @@ python usercode.py
 i=0
 k=-30
 #dec="5.4"
-while [ $i -lt 8 ]; do
+while [ $i -lt 10 ]; do
         old_image=img$((i+1)).jpg
         #new_image=annotated$((i+1)).bmp
 
@@ -41,9 +41,9 @@ while [ $i -lt 8 ]; do
                 $old_image
         #k=$((k+10))
         #elif [ $i -eq 3 ]
-		elif [ $i -eq 5 ]
+	elif [ $i -eq 5 ]; then
 		mogrify\
-				-fill white \
+		-fill white \
                 -gravity Southwest \
                 -pointsize 30 \
                 -annotate +$((fourth+140))+0 'South' \
@@ -51,8 +51,7 @@ while [ $i -lt 8 ]; do
         elif [ $i -eq 5 ]; then
         mogrify\
                 -fill white \
-                -gravity Southwest \
-				-pointsize 30 \
+                -gravity Southwest \			-pointsize 30 \
                 -annotate +$((half+190))+0 'West'\
                 $old_image
         fi
@@ -85,8 +84,8 @@ done
 
 echo "Converting into panorama"
 convert img*.jpg +append panorama.bmp
-mogrify -resize x900\! panorama.bmp
 
+#mogrify -resize x900\! panorama.bmp
 #xdg-open panorama.bmp
 
 ../BMPtoFramebuffer/bmpread panorama.bmp /dev/fb1

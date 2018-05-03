@@ -78,9 +78,9 @@ def collect_images(num_images):
     degrees = 360/image_number	# Heading offset in degrees per image
     heading = 0			# Innitial heading in degrees
 
-   for i in range (1,image_number):
-	condition_yaw(heading)
-	camera.capture('image%s.jpg' % i)
+    for i in range (1,image_number):
+        condition_yaw(heading)
+        camera.capture('img%s.jpg' % i)
 	print 'Image %s saved' % i
 	time.sleep(.5) 
 	heading = heading + degrees
