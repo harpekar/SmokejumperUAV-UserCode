@@ -6,9 +6,10 @@ import picamera
 import gpiozero
 import math
 import time
+import bounce
 from RPi import GPIO
 from time import sleep
-from bounce import arm_and_takeoff, condition_yaw, collect_images
+from bounce import arm_and_takeoff, collect_images, condition_yaw
 from dronekit import connect, VehicleMode, LocationGlobal, LocationGlobalRelative
 from pymavlink import mavutil
 
@@ -25,6 +26,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(power, GPIO.OUT, initial = GPIO.HIGH)
 GPIO.setup(clk,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(dt,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+
+camera = picamera.PiCamera();
 
 clkLastState = GPIO.input(clk)
 def button_pressed():
@@ -47,11 +50,11 @@ def rotaryTurn(clkLastState):
 	    else:
 		    counter += 1 
 
-	    if (counter == 20) or (counter < 0):
+	    if (counter == 20) or (counter < -1):
 		    counter = 0
 	    clkLastState = clkState
 	    sleep(0.02)
-
+            counter = 0.75
     return counter
 
 button.when_pressed = button_pressed
@@ -81,11 +84,12 @@ print "Place aircraft in launch location"
 time.sleep(5)
 print "Taking off in: "
 for i in range (0,10):
-	print i
+	print 10-i
 	time.sleep(1)
-        arm_and_takeoff(vehicle, height)
 
-collect_images(6)
+arm_and_takeoff(vehicle, height)
+
+collect_images(6, camera, vehicle)
 print "Returning to Launch"
 vehicle.mode = VehicleMode("RTL")
 

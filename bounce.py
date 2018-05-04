@@ -51,7 +51,7 @@ def arm_and_takeoff(vehicle, aTargetAltitude):
         time.sleep(1)
 
 # Function to yaw the copter
-def condition_yaw(heading, relative=True):
+def condition_yaw(heading, vehicle, relative=True):
     if relative:
         is_relative=1 #yaw relative to direction of travel
     else:
@@ -70,16 +70,16 @@ def condition_yaw(heading, relative=True):
     vehicle.send_mavlink(msg)
 
 # Function to adjust yaw and trigger camera for full 360 degrees
-def collect_images(num_images):
+def collect_images(num_images, camera, vehicle):
     #Initialize Camera Object 
-    camera = picamera.PiCamera()
+    #camera = picamera.PiCamera()
     
     image_number = 10 		# Number of images to be collected
     degrees = 360/image_number	# Heading offset in degrees per image
     heading = 0			# Innitial heading in degrees
 
     for i in range (1,image_number):
-        condition_yaw(heading)
+        condition_yaw(heading, vehicle)
         camera.capture('img%s.jpg' % i)
 	print 'Image %s saved' % i
 	time.sleep(.5) 
