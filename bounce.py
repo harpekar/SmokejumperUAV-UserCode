@@ -73,6 +73,8 @@ def condition_yaw(heading, vehicle, relative=True):
 def collect_images(num_images, camera, vehicle):
     #Initialize Camera Object 
     #camera = picamera.PiCamera()
+
+    send_global_velocity(0, 0, 0)
     
     image_number = 10 		# Number of images to be collected
     degrees = 360/image_number	# Heading offset in degrees per image
