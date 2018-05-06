@@ -89,6 +89,8 @@ for i in range (0,10):
 
 arm_and_takeoff(vehicle, height)
 
+send_global_velocity(0,0,0,vehicle)
+
 collect_images(6, camera, vehicle)
 print "Returning to Launch"
 vehicle.mode = VehicleMode("RTL")
