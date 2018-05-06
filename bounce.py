@@ -71,11 +71,7 @@ def condition_yaw(heading, vehicle, relative=True):
 
 # Function to adjust yaw and trigger camera for full 360 degrees
 def collect_images(num_images, camera, vehicle):
-    #Initialize Camera Object 
-    #camera = picamera.PiCamera()
-
-    send_global_velocity(0, 0, 0)
-    
+   
     image_number = 10 		# Number of images to be collected
     degrees = 360/image_number	# Heading offset in degrees per image
     heading = 0			# Innitial heading in degrees
@@ -86,7 +82,8 @@ def collect_images(num_images, camera, vehicle):
 	print 'Image %s saved' % i
 	time.sleep(.5) 
 	heading = heading + degrees
-
+	
+# Function to set velocity to zero - required before the yaw command will work
 def send_global_velocity(velocity_x, velocity_y, velocity_z, vehicle):
     """
     Move vehicle in direction based on specified velocity vectors.
