@@ -6,10 +6,9 @@ import picamera
 import gpiozero
 import math
 import time
-import bounce
 from RPi import GPIO
 from time import sleep
-from bounce import arm_and_takeoff, collect_images, condition_yaw
+from bounce import arm_and_takeoff, collect_images, condition_yaw, send_global_velocity
 from dronekit import connect, VehicleMode, LocationGlobal, LocationGlobalRelative
 from pymavlink import mavutil
 
