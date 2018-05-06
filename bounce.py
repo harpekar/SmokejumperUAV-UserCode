@@ -102,9 +102,6 @@ def send_global_velocity(velocity_x, velocity_y, velocity_z, vehicle):
         velocity_z, # Z velocity in NED frame in m/s
         0, 0, 0, # afx, afy, afz acceleration (not supported yet, ignored in GCS_Mavlink)
         0, 0)    # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink)
-
-
-		 # send command to vehicle on 1 Hz cycle
-    for x in range(0,duration):
+   
         vehicle.send_mavlink(msg)
         time.sleep(1)
