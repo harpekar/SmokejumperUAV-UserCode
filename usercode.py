@@ -92,6 +92,7 @@ send_global_velocity(0,0,0,vehicle)
 
 collect_images(6, camera, vehicle)
 print "Returning to Launch"
+vehicle.parameters['RTL_ALT'] = 0
 vehicle.mode = VehicleMode("RTL")
 
 #Close vehicle object before exiting script
