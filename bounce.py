@@ -45,13 +45,13 @@ def arm_and_takeoff(vehicle, aTargetAltitude):
     while True:
         print " Altitude: ", vehicle.location.global_relative_frame.alt 
         #Break and return from function just below target altitude.        
-        if vehicle.location.global_relative_frame.alt>=aTargetAltitude*0.95: 
+        if vehicle.location.global_relative_frame.alt>=aTargetAltitude*0.9: 
             print "Reached target altitude"
             break
         time.sleep(1)
 
 # Function to yaw the copter
-def condition_yaw(heading, relative=True):
+def condition_yaw(heading, vehicle, relative=True):
     if relative:
         is_relative=1 #yaw relative to direction of travel
     else:
@@ -70,21 +70,20 @@ def condition_yaw(heading, relative=True):
     vehicle.send_mavlink(msg)
 
 # Function to adjust yaw and trigger camera for full 360 degrees
-def collect_images(num_images):
-    #Initialize Camera Object 
-    camera = picamera.PiCamera()
-    
-    image_number = 10 		# Number of images to be collected
-    degrees = 360/image_number	# Heading offset in degrees per image
+def collect_images(num_images, camera, vehicle):
+
+    degrees = 360/num_images	# Heading offset in degrees per image
     heading = 0			# Innitial heading in degrees
 
-    for i in range (1,image_number):
-        condition_yaw(heading)
+    for i in range (0,num_images):
+        send_global_velocity(0,0,0,vehicle)
+        condition_yaw(heading, vehicle)
+        time.sleep(4) 
         camera.capture('img%s.jpg' % i)
-	print 'Image %s saved' % i
-	time.sleep(.5) 
-	heading = heading + degrees
-
+        print 'Image %s saved' % i
+        heading = heading + degrees
+	
+# Function to set velocity to zero - required before the yaw command will work
 def send_global_velocity(velocity_x, velocity_y, velocity_z, vehicle):
     """
     Move vehicle in direction based on specified velocity vectors.
@@ -103,5 +102,7 @@ def send_global_velocity(velocity_x, velocity_y, velocity_z, vehicle):
         velocity_z, # Z velocity in NED frame in m/s
         0, 0, 0, # afx, afy, afz acceleration (not supported yet, ignored in GCS_Mavlink)
         0, 0)    # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink)
-
+   
+    vehicle.send_mavlink(msg)
+    time.sleep(1)
     
