@@ -21,12 +21,12 @@ power = 16
 counter = 0
 pressed = False; 
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(power, GPIO.OUT, initial = GPIO.HIGH)
-GPIO.setup(clk,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(dt,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+#GPIO.setmode(GPIO.BCM)
+#GPIO.setup(power, GPIO.OUT, initial = GPIO.HIGH)
+#GPIO.setup(clk,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+#GPIO.setup(dt,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
 
-camera = picamera.PiCamera();
+#camera = picamera.PiCamera();
 
 clkLastState = GPIO.input(clk)
 def button_pressed():
